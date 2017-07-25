@@ -39,6 +39,8 @@ BEGIN
 
     IF NOT EXISTS(SELECT * FROM tbl_patient WHERE period_year = p_year AND period_month = p_month AND regimen_id = regimen AND facility_id = facility) THEN
         INSERT INTO tbl_patient(total, period_year, period_month, regimen_id, facility_id) VALUES(patient_total, p_year, p_month, regimen, facility);
+    ELSE
+        UPDATE tbl_patient SET total = patient_total WHERE period_year = p_year AND period_month = p_month AND regimen_id = regimen AND facility_id = facility;
     END IF;
 END//
 DELIMITER ;
@@ -63,6 +65,8 @@ BEGIN
 
     IF NOT EXISTS(SELECT * FROM tbl_consumption WHERE period_year = p_year AND period_month = p_month AND facility_id = facility AND drug_id = drug) THEN
         INSERT INTO tbl_consumption(total, period_year, period_month, facility_id, drug_id) VALUES(consumption_total, p_year, p_month, facility, drug);
+    ELSE
+        UPDATE tbl_consumption SET total = consumption_total WHERE period_year = p_year AND period_month = p_month AND facility_id = facility AND drug_id = drug; 
     END IF;
 END//
 DELIMITER ;
@@ -87,6 +91,8 @@ BEGIN
 
     IF NOT EXISTS(SELECT * FROM tbl_stock WHERE period_year = p_year AND period_month = p_month AND facility_id = facility AND drug_id = drug) THEN
         INSERT INTO tbl_stock(total, period_year, period_month, facility_id, drug_id) VALUES(soh_total, p_year, p_month, facility, drug);
+    ELSE
+        UPDATE tbl_stock SET total = soh_total WHERE period_year = p_year AND period_month = p_month AND facility_id = facility AND drug_id = drug; 
     END IF;
 END//
 DELIMITER ;
@@ -111,6 +117,8 @@ BEGIN
 
     IF NOT EXISTS(SELECT * FROM tbl_kemsa WHERE period_year = p_year AND period_month = p_month AND drug_id = drug) THEN
         INSERT INTO tbl_kemsa(issue_total, soh_total, supplier_total, received_total, period_year, period_month, drug_id) VALUES(issue, soh, supplier, received, p_year, p_month, drug);
+    ELSE
+        UPDATE tbl_kemsa SET issue_total = issue, soh_total = soh, supplier_total = supplier, received_total = received WHERE period_year = p_year AND period_month = p_month AND drug_id = drug; 
     END IF;
 END//
 DELIMITER ;
