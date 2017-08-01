@@ -122,3 +122,24 @@ BEGIN
     END IF;
 END//
 DELIMITER ;
+
+/*MOS*/
+DELIMITER //
+CREATE OR REPLACE PROCEDURE proc_save_mos()
+BEGIN
+    SET @@foreign_key_checks = 0;
+    TRUNCATE tbl_mos;
+    INSERT INTO tbl_mos(facility_mos, cms_mos, supplier_mos, period_year, period_month, drug_id)
+    SELECT 
+        IFNULL(ROUND(SUM(fs.total)/fn_get_national_amc(k.drug_id, DATE_FORMAT(str_to_date(CONCAT(k.period_year,k.period_month),'%Y%b%d'),'%Y-%m-01') ),1),0) AS facility_mos,
+        IFNULL(ROUND(k.soh_total/fn_get_national_amc(k.drug_id, DATE_FORMAT(str_to_date(CONCAT(k.period_year,k.period_month),'%Y%b%d'),'%Y-%m-01') ),1),0) AS cms_mos,
+        IFNULL(ROUND(k.supplier_total/fn_get_national_amc(k.drug_id, DATE_FORMAT(str_to_date(CONCAT(k.period_year,k.period_month),'%Y%b%d'),'%Y-%m-01')),1),0) AS supplier_mos,
+        k.period_year,
+        k.period_month,
+        k.drug_id
+    FROM tbl_kemsa k
+    INNER JOIN tbl_stock fs ON fs.drug_id = k.drug_id AND fs.period_month = k.period_month AND fs.period_year = k.period_year
+    GROUP BY k.drug_id, k.period_month, k.period_year;
+    SET @@foreign_key_checks = 1;
+END//
+DELIMITER ;
