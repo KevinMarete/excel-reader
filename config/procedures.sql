@@ -161,7 +161,7 @@ BEGIN
     GROUP by drug,facility,county,sub_county,data_month,data_year;
     /*Facility Patients*/
     TRUNCATE dsh_patient;
-    INSERT INTO dsh_patient(total, data_year, data_month, sub_county, county, facility, regimen, age_category, regimen_service, regimen_line, nnrti_drug, nrti_drug, regimen_category)
+    INSERT INTO dsh_patient(total, data_year, data_month, sub_county, county, facility, partner, regimen, age_category, regimen_service, regimen_line, nnrti_drug, nrti_drug, regimen_category)
     SELECT
         SUM(rp.total) AS total,
         rp.period_year AS data_year,
@@ -169,6 +169,7 @@ BEGIN
         cs.name AS sub_county,
         c.name AS county,
         f.name AS facility,
+        p.name AS partner,
         CONCAT_WS(' | ', r.code, r.name) AS regimen,
         CASE 
             WHEN ct.name LIKE '%adult%' OR ct.name LIKE '%mother%' THEN 'adult' 
@@ -188,9 +189,32 @@ BEGIN
     LEFT JOIN tbl_nrti n ON n.regimen_id = r.id
     LEFT JOIN tbl_nnrti nn ON nn.regimen_id = r.id
     INNER JOIN tbl_facility f ON rp.facility_id = f.id
+    LEFT JOIN tbl_partner p ON p.id = f.partner_id
     INNER JOIN tbl_subcounty cs ON cs.id = f.subcounty_id
     INNER JOIN tbl_county c ON c.id = cs.county_id
     GROUP by regimen_category,nrti_drug,nnrti_drug,regimen_line,regimen_service,age_category,regimen,facility,county,sub_county,data_month,data_year;
+    /*ADT Sites*/
+    TRUNCATE dsh_site;
+    INSERT INTO dsh_site(facility, county, subcounty, partner, installed, version, internet, active_patients, coordinator, backup)
+    SELECT 
+        f.name facility,
+        c.name county,
+        sb.name subcounty,
+        p.name partner,
+        IF(i.id IS NOT NULL, 'yes', 'no') installed,
+        i.version,
+        IF(i.is_internet = 1, 'yes', 'no') internet,
+        i.active_patients,
+        u.name coordinator,
+        IF(b.id IS NOT NULL, 'yes', 'no') backup
+    FROM tbl_facility f 
+    INNER JOIN tbl_subcounty sb ON sb.id = f.subcounty_id
+    INNER JOIN tbl_county c ON c.id = sb.county_id
+    INNER JOIN tbl_partner p ON p.id = f.partner_id
+    LEFT JOIN tbl_install i ON f.id = i.facility_id
+    LEFT JOIN tbl_backup b ON b.facility_id = f.id
+    LEFT JOIN tbl_user u ON u.id = i.user_id
+    WHERE f.category LIKE '%central%';
     SET @@foreign_key_checks = 1;
 END//
 DELIMITER ;
