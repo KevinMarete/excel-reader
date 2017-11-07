@@ -144,11 +144,12 @@ BEGIN
     GROUP BY d.name, k.period_month, k.period_year;
     /*Facility Consumption*/
     TRUNCATE dsh_consumption;
-    INSERT INTO dsh_consumption(total, data_year, data_month, sub_county, county, facility, drug)
+    INSERT INTO dsh_consumption(total, data_year, data_month, data_date, sub_county, county, facility, drug)
     SELECT 
         SUM(cf.total) AS total,
         cf.period_year AS data_year,
         cf.period_month AS data_month,
+        STR_TO_DATE(CONCAT_WS('-', cf.period_year, cf.period_month, '01'),'%Y-%b-%d') AS data_date,
         cs.name AS sub_county,
         c.name AS county,
         f.name AS facility,
@@ -161,11 +162,12 @@ BEGIN
     GROUP by drug,facility,county,sub_county,data_month,data_year;
     /*Facility Patients*/
     TRUNCATE dsh_patient;
-    INSERT INTO dsh_patient(total, data_year, data_month, sub_county, county, facility, partner, regimen, age_category, regimen_service, regimen_line, nnrti_drug, nrti_drug, regimen_category)
+    INSERT INTO dsh_patient(total, data_year, data_month, data_date, sub_county, county, facility, partner, regimen, age_category, regimen_service, regimen_line, nnrti_drug, nrti_drug, regimen_category)
     SELECT
         SUM(rp.total) AS total,
         rp.period_year AS data_year,
         rp.period_month AS data_month,
+        STR_TO_DATE(CONCAT_WS('-', rp.period_year, rp.period_month, '01'),'%Y-%b-%d') AS data_date,
         cs.name AS sub_county,
         c.name AS county,
         f.name AS facility,
