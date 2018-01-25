@@ -123,9 +123,9 @@ BEGIN
 END//
 DELIMITER ;
 
-/*Create Dashboard Tables intead of views*/
+/*Create Dashboard Tables from excel data*/
 DELIMITER //
-CREATE OR REPLACE PROCEDURE proc_create_dashboard_tables()
+CREATE OR REPLACE PROCEDURE proc_create_dsh_tables_excel()
 BEGIN
     SET @@foreign_key_checks = 0;
     /*National MOS*/
