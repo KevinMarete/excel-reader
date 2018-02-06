@@ -220,3 +220,24 @@ BEGIN
     SET @@foreign_key_checks = 1;
 END//
 DELIMITER ;
+
+
+/****LOOK AT THIS AGAIN****/
+DELIMITER //
+CREATE PROCEDURE proc_add_datadate_dsh_mos_table()
+BEGIN
+    CREATE TABLE dsh_mos AS
+    SELECT 
+        IFNULL(ROUND(SUM(fs.total)/fn_get_national_amc(k.drug_id, DATE_FORMAT(str_to_date(CONCAT(k.period_year,k.period_month),'%Y%b%d'),'%Y-%m-01') ),1),0) AS facility_mos,
+        IFNULL(ROUND(k.soh_total/fn_get_national_amc(k.drug_id, DATE_FORMAT(str_to_date(CONCAT(k.period_year,k.period_month),'%Y%b%d'),'%Y-%m-01') ),1),0) AS cms_mos,
+        IFNULL(ROUND(k.supplier_total/fn_get_national_amc(k.drug_id, DATE_FORMAT(str_to_date(CONCAT(k.period_year,k.period_month),'%Y%b%d'),'%Y-%m-01')),1),0) AS supplier_mos,
+        k.period_year AS data_year,
+        k.period_month AS data_month,
+        STR_TO_DATE(CONCAT_WS('-', k.period_year, k.period_month, '01'),'%Y-%b-%d') AS data_date,
+        d.name AS drug
+    FROM tbl_kemsa k
+    INNER JOIN tbl_stock fs ON fs.drug_id = k.drug_id AND fs.period_month = k.period_month AND fs.period_year = k.period_year
+    INNER JOIN vw_drug_list d ON d.id = k.drug_id
+    GROUP BY d.name, k.period_month, k.period_year;
+END//
+DELIMITER ;
