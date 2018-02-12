@@ -217,7 +217,8 @@ BEGIN
     LEFT JOIN tbl_install i ON f.id = i.facility_id
     LEFT JOIN tbl_backup b ON b.facility_id = f.id
     LEFT JOIN tbl_user u ON u.id = i.user_id
-    WHERE f.category LIKE '%central%';
+    WHERE f.category LIKE '%central%'
+    GROUP BY f.id;
     SET @@foreign_key_checks = 1;
 END//
 DELIMITER ;
