@@ -5,7 +5,7 @@ CREATE OR REPLACE VIEW vw_drug_list AS
 	FROM tbl_drug d
 	INNER JOIN tbl_generic g ON g.id = d.generic_id
 	INNER JOIN tbl_formulation f ON f.id = d.formulation_id
-	ORDER BY id
+	ORDER BY id;
 
 /*Regimen List*/
 CREATE OR REPLACE VIEW vw_regimen_list AS
@@ -15,7 +15,7 @@ CREATE OR REPLACE VIEW vw_regimen_list AS
 	INNER JOIN tbl_category c ON c.id = r.category_id
 	INNER JOIN tbl_service s ON s.id = r.service_id
 	INNER JOIN tbl_line l ON l.id = r.line_id
-	ORDER BY id
+	ORDER BY id;
 
 /*Regimen Drug List*/
 CREATE OR REPLACE VIEW vw_regimen_drug_list AS
@@ -23,4 +23,4 @@ CREATE OR REPLACE VIEW vw_regimen_drug_list AS
 		CONCAT_WS(' | ', r.code, r.name) regimen, dl.name drug
 	FROM tbl_regimen_drug rd 
 	INNER JOIN tbl_regimen r ON r.id = rd.regimen_id
-	INNER JOIN vw_drug_list dl ON dl.id = rd.drug_id
+	INNER JOIN vw_drug_list dl ON dl.id = rd.drug_id;
