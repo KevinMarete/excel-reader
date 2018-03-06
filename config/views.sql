@@ -16,3 +16,11 @@ CREATE OR REPLACE VIEW vw_regimen_list AS
 	INNER JOIN tbl_service s ON s.id = r.service_id
 	INNER JOIN tbl_line l ON l.id = r.line_id
 	ORDER BY id
+
+/*Regimen Drug List*/
+CREATE OR REPLACE VIEW vw_regimen_drug_list AS
+	SELECT
+		CONCAT_WS(' | ', r.code, r.name) regimen, dl.name drug
+	FROM tbl_regimen_drug rd 
+	INNER JOIN tbl_regimen r ON r.id = rd.regimen_id
+	INNER JOIN vw_drug_list dl ON dl.id = rd.drug_id
