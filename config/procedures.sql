@@ -196,29 +196,6 @@ BEGIN
     INNER JOIN tbl_subcounty cs ON cs.id = f.subcounty_id
     INNER JOIN tbl_county c ON c.id = cs.county_id
     GROUP by regimen_category,nrti_drug,nnrti_drug,regimen_line,regimen_service,age_category,regimen,facility,county,sub_county,data_month,data_year;
-    /*ADT Sites*/
-    TRUNCATE dsh_site;
-    INSERT INTO dsh_site(facility, county, subcounty, partner, installed, version, internet, active_patients, coordinator, backup)
-    SELECT 
-        f.name facility,
-        c.name county,
-        sb.name subcounty,
-        p.name partner,
-        IF(i.id IS NOT NULL, 'yes', 'no') installed,
-        i.version,
-        IF(i.is_internet = 1, 'yes', 'no') internet,
-        i.active_patients,
-        u.name coordinator,
-        IF(b.id IS NOT NULL, 'yes', 'no') backup
-    FROM tbl_facility f 
-    INNER JOIN tbl_subcounty sb ON sb.id = f.subcounty_id
-    INNER JOIN tbl_county c ON c.id = sb.county_id
-    INNER JOIN tbl_partner p ON p.id = f.partner_id
-    LEFT JOIN tbl_install i ON f.id = i.facility_id
-    LEFT JOIN tbl_backup b ON b.facility_id = f.id
-    LEFT JOIN tbl_user u ON u.id = i.user_id
-    WHERE f.category LIKE '%central%'
-    GROUP BY f.id;
     SET @@foreign_key_checks = 1;
 END//
 DELIMITER ;
