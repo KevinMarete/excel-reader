@@ -1,6 +1,7 @@
 /*National AMC*/
+DROP FUNCTION IF EXISTS fn_get_national_amc;
 DELIMITER //
-CREATE OR REPLACE FUNCTION fn_get_national_amc(pm_drug_id integer, pm_period_date date) RETURNS INT(10)
+CREATE FUNCTION fn_get_national_amc(pm_drug_id integer, pm_period_date date) RETURNS INT(10)
     DETERMINISTIC
 BEGIN
     DECLARE amc INT(10);

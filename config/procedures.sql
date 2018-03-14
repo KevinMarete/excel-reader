@@ -1,6 +1,7 @@
 /*Ordering Facilities*/
+DROP PROCEDURE IF EXISTS proc_save_facility;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE proc_save_facility(
+CREATE PROCEDURE proc_save_facility(
     IN facility_code VARCHAR(20), 
     IN facility_name VARCHAR(150),
     IN county_name VARCHAR(30)
@@ -21,8 +22,9 @@ END//
 DELIMITER ;
 
 /*Facility Patients*/
+DROP PROCEDURE IF EXISTS proc_save_patient;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE proc_save_patient(
+CREATE PROCEDURE proc_save_patient(
     IN facility_code VARCHAR(20), 
     IN regimen_code VARCHAR(6),
     IN patient_total INT(11),
@@ -46,8 +48,9 @@ END//
 DELIMITER ;
 
 /*Facility Consumption*/
+DROP PROCEDURE IF EXISTS proc_save_consumption;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE proc_save_consumption(
+CREATE PROCEDURE proc_save_consumption(
     IN facility_code VARCHAR(20),
     IN drug_name VARCHAR(255), 
     IN packsize VARCHAR(20),
@@ -72,8 +75,9 @@ END//
 DELIMITER ;
 
 /*Facility Stocks*/
+DROP PROCEDURE IF EXISTS proc_save_stock;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE proc_save_stock(
+CREATE PROCEDURE proc_save_stock(
     IN facility_code VARCHAR(20),
     IN drug_name VARCHAR(255), 
     IN packsize VARCHAR(20),
@@ -98,8 +102,9 @@ END//
 DELIMITER ;
 
 /*Kemsa Stocks*/
+DROP PROCEDURE IF EXISTS proc_save_kemsa;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE proc_save_kemsa(
+CREATE PROCEDURE proc_save_kemsa(
     IN drug_name VARCHAR(255), 
     IN packsize VARCHAR(20),
     IN p_year INT(4),
@@ -124,8 +129,9 @@ END//
 DELIMITER ;
 
 /*Create Dashboard Tables from excel data*/
+DROP PROCEDURE IF EXISTS proc_create_dsh_tables_excel;
 DELIMITER //
-CREATE OR REPLACE PROCEDURE proc_create_dsh_tables_excel()
+CREATE PROCEDURE proc_create_dsh_tables_excel()
 BEGIN
     SET @@foreign_key_checks = 0;
     /*National MOS*/
