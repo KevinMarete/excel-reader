@@ -1,5 +1,5 @@
 /*Drug List*/
-DROP VIEW IF EXISTS vw_install_list;
+DROP VIEW IF EXISTS vw_drug_list;
 CREATE VIEW vw_drug_list AS
 	SELECT
 		d.id, IF(g.abbreviation = '', CONCAT_WS(' ', g.name, CONCAT_WS(' ', d.strength, f.name)), CONCAT_WS(') ', CONCAT_WS(' (', g.name, g.abbreviation), CONCAT_WS(' ', d.strength, f.name))) name, d.packsize pack_size
@@ -9,7 +9,7 @@ CREATE VIEW vw_drug_list AS
 	ORDER BY id;
 
 /*Regimen List*/
-DROP VIEW IF EXISTS vw_install_list;
+DROP VIEW IF EXISTS vw_regimen_list;
 CREATE VIEW vw_regimen_list AS
 	SELECT
 		r.id, CONCAT_WS(' | ', r.code, r.name) name, r.description, c.name category, s.name service, l.name line
