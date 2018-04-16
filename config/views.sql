@@ -12,7 +12,7 @@ CREATE VIEW vw_drug_list AS
 DROP VIEW IF EXISTS vw_regimen_list;
 CREATE VIEW vw_regimen_list AS
 	SELECT
-		r.id, CONCAT_WS(' | ', r.code, r.name) name, r.description, c.name category, s.name service, l.name line
+		r.id, r.code, CONCAT_WS(' | ', r.code, r.name) name, r.description, c.name category, s.name service, l.name line
 	FROM tbl_regimen r
 	INNER JOIN tbl_category c ON c.id = r.category_id
 	INNER JOIN tbl_service s ON s.id = r.service_id
