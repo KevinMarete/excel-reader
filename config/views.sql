@@ -2,10 +2,11 @@
 DROP VIEW IF EXISTS vw_drug_list;
 CREATE VIEW vw_drug_list AS
 	SELECT
-		d.id, IF(g.abbreviation = '', CONCAT_WS(' ', g.name, CONCAT_WS(' ', d.strength, f.name)), CONCAT_WS(') ', CONCAT_WS(' (', g.name, g.abbreviation), CONCAT_WS(' ', d.strength, f.name))) name, d.packsize pack_size
+		d.id, IF(g.abbreviation = '', CONCAT_WS(' ', g.name, CONCAT_WS(' ', d.strength, f.name)), CONCAT_WS(') ', CONCAT_WS(' (', g.name, g.abbreviation), CONCAT_WS(' ', d.strength, f.name))) name, d.packsize pack_size, dc.name drug_category, d.min_mos, d.max_mos, d.stock_status, d.kemsa_code
 	FROM tbl_drug d
 	INNER JOIN tbl_generic g ON g.id = d.generic_id
 	INNER JOIN tbl_formulation f ON f.id = d.formulation_id
+	INNER JOIN tbl_drug_category dc On dc.id = d.drug_category
 	ORDER BY id;
 
 /*Regimen List*/
